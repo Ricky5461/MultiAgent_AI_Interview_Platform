@@ -25,10 +25,10 @@ export const GoogleAuth = async (req, res) => {
             userId:user._id,
             name: user.name,
             email:user.email,
-            interviewCoin:user.interviewCoin
+            interviewCoins:user.interviewCoins
          }),"EX",7*24*60*60)
 
-         res.cookies("session",sessionId, {
+         res.cookie("session",sessionId, {
             httponly: true,
             secure: false,
             samesite: "strict",
@@ -41,7 +41,7 @@ export const GoogleAuth = async (req, res) => {
     }
 }
 
-export const logout = async ()=>{
+export const logout = async (req, res) => {
     try{
         const sessionId = req.cookies?.session
         if(sessionId){
