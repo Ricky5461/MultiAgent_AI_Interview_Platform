@@ -8,6 +8,38 @@ import extractedText from "../config/pdf.js";
 import Resume from "../models/resume.model.js"
 import fs from "fs"
 
+// ai code for different model name of groq instead of verstile here using model anme openai of groq
+const flattenEntry = (entry) => {
+    if (typeof entry === "string") return entry;
+    if (entry && typeof entry === "object") {
+        if (entry.degree || entry.institution) {
+            return [entry.degree, entry.institution, entry.dates, entry.details].filter(Boolean).join(", ");
+        }
+        if (entry.role || entry.organization) {
+            const resp = Array.isArray(entry.responsibilities) ? entry.responsibilities.join("; ") : "";
+            return [entry.role, entry.organization, entry.dates, entry.location, resp].filter(Boolean).join(", ");
+        }
+        if (entry.title || entry.description) {
+            return [entry.title, entry.duration, entry.description].filter(Boolean).join(", ");
+        }
+        return Object.values(entry).filter(Boolean).join(", ");
+    }
+    return String(entry ?? "");
+};
+
+const normalizeResumeData = (data) => {
+    const arrayFields = ["education", "experience", "projects", "skills", "strengths", "weaknesses", "missingSkills", "recommendations"];
+    const normalized = { ...data };
+    for (const field of arrayFields) {
+        if (Array.isArray(normalized[field])) {
+            normalized[field] = normalized[field].map(flattenEntry);
+        }
+    }
+    return normalized;
+};
+
+                       
+// ai code above this ^
 export const uploadResume = async (req, res) => {
     let file
     try {
@@ -30,7 +62,8 @@ export const uploadResume = async (req, res) => {
 
         const aiResponse = await resumeAgent(resumeText)
 
-        const resumeData = JSON.parse(aiResponse)
+        // const resumeData = JSON.parse(aiResponse)
+        const resumeData = normalizeResumeData(JSON.parse(aiResponse))
 
         let resume = await Resume.findOne({userId})
 

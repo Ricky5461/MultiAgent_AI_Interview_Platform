@@ -4,7 +4,8 @@ dotenv.config()
 
 // GROQ_API_KEY will be automatically fetch
 const llm = new ChatGroq({
-    model: "llama-3.3-70b-versatile",
+    // model: "llama-3.3-70b-versatile",
+    model:"openai/gpt-oss-120b",
     temperature: 0.2,
     maxTokens: 2500,
     maxRetries: 2,
