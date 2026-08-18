@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { FaCirclePlus } from "react-icons/fa6";
 import { FiLogOut } from "react-icons/fi";
 // import { GiTwoCoins } from "react-icons/gi";
+
 const NAV_ITEMS = [
   {
     icon: <FiFileText size={15} />,
@@ -49,8 +50,7 @@ function Sidebar({
     <div className="flex flex-col h-full">
       <div
         className={`px-3 h-13 border-b border-black/8 shrink-0 flex 
-            items-center ${sidebarOpen ? "justify-between" : "justify-center"}`}
-      >
+        items-center ${sidebarOpen ? "justify-between" : "justify-center"}`}>
         {sidebarOpen && (
           <div className="flex items-center gap-2.5">
             <div
@@ -247,6 +247,31 @@ function Sidebar({
       >
         {inner}
       </motion.aside>
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div 
+          initial = {{ opacity:0}}
+          animate = {{ opacity:1}}
+          exit= {{ opacity:0}}
+          onClick={()=>setMobileOpen(false)}
+          className="fixed inset-0 bg-black/30 z-40 md:hidden backdrop-blur-sm"
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.aside
+          initial = {{ x: -280}}
+          animate = {{ x: 0}}
+          exit= {{ x: -280}}
+          transition= {{ duration: 0.25, ease:"easeInOut" }}
+          className="fixed top-0 h-screen w-70 max-w-[85vw] bg-white 
+          border-r border-black/8 flex flex-col z-50 md:hidden overflow-hidden" 
+          >
+          {inner}   
+          </motion.aside>
+        )}
+      </AnimatePresence>
     </>
   );
 }
