@@ -3,11 +3,52 @@ import React from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { FiUpload, FiUploadCloud } from "react-icons/fi";
+import { FiUpload, FiUploadCloud,FiUser } from "react-icons/fi";
 import api from "../utils/axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setResume } from "../redux/resumeSlice";
+import {PolarAngleAxis, RadialBar, RadialBarChart} from "recharts";
 
+// Components hai ye and iske under callback function hai
+const ScoreRing = ({score})=>{
+  const color = score>=75 ? "#7c3aed" : score>=50 ? "#f59e0b": "#ef4444";
+  return (
+    <div className="relative flex items-center justify-center">
+       <RadialBarChart 
+       width={110}
+       height={110}
+       cx={55}
+       cy={55}
+       innerRadius={40}
+       outerRadius={53}
+       startAngle={90}
+       endAngle={-270}
+       data={[{value:score,fill:color}]}
+       barSize={8}>
+        <PolarAngleAxis type="number" domain={[0,100]} tick={false}/>
+        <RadialBar background={{ fill:"#e5e7eb"}} dataKey="value" cornerRadius={8}/>
+       </RadialBarChart>
+       <div className="absolute flex items-center">
+        <span className="text-lg font-bold text-white leading-none">{score}</span>
+        <span className="text-[9px] text-gray-200 mt-0.5">/100</span>
+       </div>
+    </div>
+  )
+}
+
+const Tag = ({text,color})=>{
+  const styles = {
+    purple:"bg-purple-50 text-purple-700 border-purple-200",
+    red:   "bg-red-50 text-red-700 border-red-200",
+    green: "bg-green-50 text-green-700 border-green-200",
+    yellow:"bg-yellow-50 text-yellow-700 border-yellow-200"
+  }  
+  return (
+       <div className={`text-[10px] px-1.5 py-1 rounded-md border font-medium ${styles[color]}`}>
+         {text}
+       </div>
+    )
+}
 const Navbar = ({ label }) => {
   const navigate = useNavigate();
 
@@ -100,7 +141,50 @@ function Scorer({ user, setUser }) {
           >
             <div className="absolute inset-0 bg-linear-to-br from-white/8 via-transparent 
           to-transparent pointer-events-none"/>
+            <div className="relative">
+              <ScoreRing score={resume.score}/>
+            </div>
+            <div className="relative">
+              <p className="text-white/50 text-xs mb-0.5">Resume Score</p>
+              <p className="text-lg sm:text-xl font-bold mb-1.5 text-white">
+                {resume.score >=75 ? "Strong":resume.score >=50 ? "Average":"Needs Work"}
+              </p>
+              <div className="flex items-center gap-1">
+                <FiUser className="text-purple-400 text-xs"/>
+                <span className="text-xs text-purple-300">
+                  {resume?.suggestedRole}
+                </span>
+              </div>
+            </div>
           </motion.div>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.05 }}
+              className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl 
+              border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-4 sm:flex-row
+              shadow-[0_8px_32px__rgba(0,0,0,0.2)]"
+            >
+              <div className="absolute inset-0 bg-linear-to-br from-white/8 via-transparent 
+                   to-transparent pointer-events-none"/>
+                   <div className=""></div>
+                   <div></div>
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.05 }}
+              className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl 
+                       border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-4 sm:flex-row
+                       shadow-[0_8px_32px__rgba(0,0,0,0.2)]"
+            >
+              <div className="absolute inset-0 bg-linear-to-br from-white/8 via-transparent 
+            to-transparent pointer-events-none"/>
+
+            </motion.div>
+          </div>
         </section>
       </div>
     );
