@@ -3,7 +3,7 @@ import React from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { FiUpload, FiUploadCloud,FiUser } from "react-icons/fi";
+import { FiAlertCircle, FiTrendingUp, FiUpload, FiUploadCloud,FiUser, FiZap } from "react-icons/fi";
 import api from "../utils/axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setResume } from "../redux/resumeSlice";
@@ -42,7 +42,7 @@ const Tag = ({text,color})=>{
     red:   "bg-red-50 text-red-700 border-red-200",
     green: "bg-green-50 text-green-700 border-green-200",
     yellow:"bg-yellow-50 text-yellow-700 border-yellow-200"
-  }  
+  };
   return (
        <div className={`text-[10px] px-1.5 py-1 rounded-md border font-medium ${styles[color]}`}>
          {text}
@@ -130,7 +130,7 @@ function Scorer({ user, setUser }) {
               Re-Uploaded
             </button>
           </div>
-
+{/* Score rings */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -157,37 +157,92 @@ function Scorer({ user, setUser }) {
               </div>
             </div>
           </motion.div>
+{/* Weaknesses and Strengths */}
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.05 }}
+              transition={{ duration: 0.5, delay: 0.07 }}
               className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl 
-              border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-4 sm:flex-row
+              border border-white/10 rounded-2xl p-4 sm:flex-row
               shadow-[0_8px_32px__rgba(0,0,0,0.2)]"
             >
               <div className="absolute inset-0 bg-linear-to-br from-white/8 via-transparent 
-                   to-transparent pointer-events-none"/>
-                   <div className=""></div>
-                   <div></div>
+                  to-transparent pointer-events-none"
+              />
+              <div className="relative flex items-center gap-1.5 mb-2.5">
+                <FiAlertCircle className="text-green-400" size={14}/>
+                <span className="text-xs font-semibold text-white">Strengths</span>
+              </div>
+              <div className="relative flex flex-wrap gap-1.5">
+                {resume?.strengths?.map(s =><Tag key={s} text={s} color="green"/>)}
+              </div>
             </motion.div>
 
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.05 }}
+              transition={{ duration: 0.5, delay: 0.07 }}
               className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl 
-                       border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-4 sm:flex-row
-                       shadow-[0_8px_32px__rgba(0,0,0,0.2)]"
+              border border-white/10 rounded-2xl p-4 sm:flex-row
+              shadow-[0_8px_32px__rgba(0,0,0,0.2)]"
             >
               <div className="absolute inset-0 bg-linear-to-br from-white/8 via-transparent 
-            to-transparent pointer-events-none"/>
-
+                  to-transparent pointer-events-none"
+              />
+              <div className="relative flex items-center gap-1.5 mb-2.5">
+                <FiAlertCircle className="text-yellow-400" size={14}/>
+                <span className="text-xs font-semibold text-white">Weaknesses</span>
+              </div>
+              <div className="relative flex flex-wrap gap-1.5">
+                {resume?.weaknesses?.map(s =><Tag key={s} text={s} color="yellow"/>)}
+              </div>
             </motion.div>
           </div>
+{/* Missing skills */}
+          <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.09 }}
+              className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl 
+              border border-white/10 rounded-2xl p-4 sm:flex-row
+              shadow-[0_8px_32px__rgba(0,0,0,0.2)]"
+            >
+              <div className="absolute inset-0 bg-linear-to-br from-white/8 via-transparent 
+                  to-transparent pointer-events-none"
+              />
+              <div className="relative flex items-center gap-1.5 mb-2.5">
+                <FiZap className="text-red-400" size={14}/>
+                <span className="text-xs font-semibold text-white">Missing Skills</span>
+              </div>
+              <div className="relative flex flex-wrap gap-1.5">
+                {resume?.missingSkills?.map(s =><Tag key={s} text={s} color="red"/>)}
+              </div>
+          </motion.div>
+  {/* Recommendations */}
+          <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.12 }}
+              className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl 
+              border border-white/10 rounded-2xl p-4 sm:flex-row
+              shadow-[0_8px_32px__rgba(0,0,0,0.2)]"
+            >
+              <div className="absolute inset-0 bg-linear-to-br from-white/8 via-transparent 
+                  to-transparent pointer-events-none"
+              />
+              <div className="relative flex items-center gap-1.5 mb-2.5">
+                <FiTrendingUp className="text-purple-400" size={14}/>
+                <span className="text-xs font-semibold text-white">Recommendations</span>
+              </div>
+              <div className="relative flex flex-wrap gap-1.5">
+                {resume?.recommendations?.map(s =><Tag key={s} text={s} color="purple"/>)}
+              </div>
+          </motion.div>
         </section>
       </div>
     );
+
   // upload section
   return (
     <div className="min-h-screen bg-white text-[#0a0a0a]">
