@@ -1,6 +1,7 @@
 import React from 'react'
 import { FiDownload } from 'react-icons/fi'
 import { useReactToPrint } from 'react-to-print'
+import { useCoins } from '../../apis/user.api'
 
 function DownloadBtn({docRef,user,setUser}) {
   const handlePDF = useReactToPrint({
@@ -8,7 +9,22 @@ function DownloadBtn({docRef,user,setUser}) {
     documentTitle:'FresherAiPDF'
   })
   const handleDownload = async()=>{
-    handlePDF()
+    try {
+        const coinResponse = await useCoins({ coins:10, action:"resume-builder" })
+        
+        setUser((prev)=>({
+            ...prev, 
+            interviewCoins: coinResponse?.interviewCoins,
+        }))
+        handlePDF()
+    } catch (error) {
+        console.log(error)
+      if(error.response?.status === 403){
+        return alert("Not Enough Interview Coins.");
+      } 
+      alert(
+        error.response?.data?.message || "Something went wrong.")  
+    }
   }
     return (
     <button 

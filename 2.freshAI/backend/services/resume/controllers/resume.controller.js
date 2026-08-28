@@ -117,7 +117,7 @@ export const getResume = async (req,res)=> {
         }
         const resume = await Resume.findOne({userId})
         if(!resume){
-            return res.status(404).JSON({
+            return res.status(404).json({
                 success:false,
                 message:"resume not found"
             })

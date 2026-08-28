@@ -8,6 +8,7 @@ import api from "../utils/axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setResume } from "../redux/resumeSlice";
 import {PolarAngleAxis, RadialBar, RadialBarChart} from "recharts";
+import { useCoins } from "../apis/user.api";
 
 // Components hai ye and iske under callback function hai
 const ScoreRing = ({score})=>{
@@ -94,6 +95,12 @@ function Scorer({ user, setUser }) {
     }
     try {
       setLoading(true);
+      
+      const coinResponse = await useCoins({coins:10, action:"resume-scorere"})
+      setUser((prev)=>({
+        ...prev, interviewCoins:coinResponse?.interviewCoins,
+      }))
+   
       const formData = new FormData();
       formData.append("resume", file);
 

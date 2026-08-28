@@ -28,8 +28,8 @@ const STEPS = [
 ];
 const TOTAL_STEPS = STEPS.length;
 
-function ResumeBuilder(user, setUser) {
-  const [currentStep, setCurrentStep] = useState(3);
+function ResumeBuilder({user, setUser}) {
+  const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState(initialData);
   const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
