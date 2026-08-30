@@ -1,4 +1,4 @@
-import { StateGraph } from "@langchain/langgraph";
+import { START,END, StateGraph } from "@langchain/langgraph";
 import InterviewState from "./state.js"
 import { interviewNode,summaryNode, feedbackNode} from "./nodes.js"
 
@@ -13,7 +13,7 @@ function router(state){
     }
 }
 
-function feedbackRouter(start){
+function feedbackRouter(state){
     if(state.completed){
         return "summaryAgent";
     }
@@ -24,7 +24,32 @@ function feedbackRouter(start){
 const graph = new StateGraph(InterviewState)
     .addNode("interviewAgent",interviewNode)
     .addNode("feedbackAgent",feedbackNode)
-    .addNode("summaryNode",summaryNode)
+    .addNode("summaryAgent",summaryNode)
     //Conditional agent
-    .addConditional()
+    .addConditionalEdges(
+        START,
+        router,
+        {
+            interviewAgent:"interviewAgent",
+            feedbackAgent:"feedbackAgent"
+        }
+    )
+    .addEdge(
+        "interviewAgent",
+        END
+    )
+    .addConditionalEdges(
+        "feedbackAgent",
+        feedbackRouter,
+        {
+            summaryAgent:"summaryAgent",
+            [END]:END
+        }
+    )
+    .addEdge(
+        "summaryAgent",
+        END
+    )  
+    .compile()
     
+export default graph

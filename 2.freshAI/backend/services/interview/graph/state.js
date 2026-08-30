@@ -1,28 +1,28 @@
-import { Annotaion } from "@langchain/langgraph"
-const InterviewState = Annotaion.Root({
-  action: Annotaion(),
+import { Annotation } from "@langchain/langgraph"
+const InterviewState = Annotation.Root({
+  action: Annotation(),
 
-  type: Annotaion(),
+  type: Annotation(),
 
-  role: Annotaion(),
+  role: Annotation(),
 
-  useResume: Annotaion(),
+  useResume: Annotation(),
 
-  resume: Annotaion(),
+  resume: Annotation(),
 
-  questions: Annotaion(),
+  questions: Annotation(),
 
-  question: Annotaion(),
+  question: Annotation(),
 
-  answer: Annotaion(),
+  answer: Annotation(),
 
-  difficulty: Annotaion(),
+  difficulty: Annotation(),
 
-  feedback: Annotaion(),
+  feedback: Annotation(),
 
-  report: Annotaion(),
+  report: Annotation(),
 
-  completed: Annotaion(),
+  completed: Annotation(),
 })
 
 export default InterviewState;

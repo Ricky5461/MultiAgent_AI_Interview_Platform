@@ -29,7 +29,7 @@ export async function feedbackNode(state) {
     }
 }
 
-expor async function summaryNode(state) => {
+export async function summaryNode(state){
     const report = await summaryAgent({
         type: state.type,
 
