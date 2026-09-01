@@ -10,3 +10,14 @@ export const startInterview = async (data) =>{
         return null
     }
 }
+
+export const getInterview = async (id)=>{
+    try {
+        const response = await api.get(`/api/interview/${id}`)
+        console.log(response.data)
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return null
+    }
+}

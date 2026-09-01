@@ -45,7 +45,7 @@ export const logout = async (req, res) => {
     try{
         const sessionId = req.cookies?.session
         if(sessionId){
-            await redis.del(`session: ${sessionId}`)
+            await redis.del(`session:${sessionId}`)
         }
 
         res.clearCookie("session", {
@@ -129,3 +129,47 @@ export const useCoins = async (req,res)=>{
         });
     }
 }
+
+// for reseting the coins 
+export const resetCoins = async (req, res) => {
+    try {
+        const sessionId = req.cookies?.session;
+        if (!sessionId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        const session = await redis.get(`session:${sessionId}`);
+        if (!session) {
+            return res.status(401).json({ message: "Session expired" });
+        }
+        const sessionData = JSON.parse(session);
+
+        const user = await User.findById(sessionData.userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User Not Found" });
+        }
+
+        user.interviewCoins = 500; // or your DEFAULT_COINS constant
+        await user.save();
+
+        await redis.set(
+            `session:${sessionId}`,
+            JSON.stringify({
+                userId: user._id,
+                name: user.name,
+                email: user.email,
+                interviewCoins: user.interviewCoins,
+            }),
+            "EX",
+            7 * 24 * 60 * 60
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Interview coins reset successfully",
+            interviewCoins: user.interviewCoins,
+        });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
