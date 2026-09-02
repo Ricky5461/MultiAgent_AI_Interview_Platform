@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getInterview } from '../apis/interview.api';
+import Step2interview from '../components/interview/Step2interview';
 
 function InterviewPage({user , setUser}) {
-  
+
 const { id } = useParams()
 const [ loading , setLoading ] = useState(true);
 const [interview, setInterview] = useState(null)
@@ -14,7 +15,7 @@ useEffect(()=>{
      const response = await getInterview(id)
      const data = response?.interview
      if(data.status === "completed"){
-      navigate(`/interview/${id}/report`,{replace:true});
+       navigate(`/interview/${id}/report`,{replace:true});
       return;
      }
      setInterview(data)
@@ -32,6 +33,7 @@ if(loading){
     </div>
   )
 }
+
 if(!interview)return null 
 return (
      <Step2interview

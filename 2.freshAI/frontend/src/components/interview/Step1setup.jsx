@@ -54,31 +54,31 @@ function Step1setup({ user, setUser }) {
         }
     }
 
-    const start = async () => {
-        setStarting(true)
-        const response = await startInterview({ role, type, useResume, resume })
+   const start = async () => {
+    setStarting(true);
+    try {
+        // 1. Deduct coins FIRST
+        const coinResponse = await useCoins({ coins: 50, action: "start-interview" });
+        setUser((prev) => ({
+            ...prev,
+            interviewCoins: coinResponse?.interviewCoins,
+        }));
 
-        if(response){
-            try {
-                
-            const coinResponse = await useCoins({ coins: 50, action: "start-interview" })
+        // 2. Only start the interview if coins were successfully deducted
+        const response = await startInterview({ role, type, useResume, resume });
 
-            setUser((prev) => ({
-                ...prev, interviewCoin: coinResponse?.interviewCoin,
-            }))
-            } catch (error) {
-                setStarting(false)
-                alert("Failed to use coins.")
-                return;
-            }
-
-
+        setStarting(false);
+        navigate(`/interview/${response.interviewId}`);
+    } catch (error) {
+        console.log(error);
+        setStarting(false);
+        if (error.response?.status === 403) {
+            alert("Not enough interview coins.");
+        } else {
+            alert(error.response?.data?.message || "Failed to start interview.");
         }
-
-        setStarting(false)
-        navigate(`/interview/${response.interviewId}`)
-
     }
+};
 
     return (
         <div className='min-h-screen bg-white flex items-center justify-center p-3 sm:p-5'>
