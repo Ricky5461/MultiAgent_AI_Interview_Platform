@@ -4,19 +4,21 @@ import { useReactToPrint } from 'react-to-print'
 import { useCoins } from '../../apis/user.api'
 
 function DownloadBtn({docRef,user,setUser}) {
+  
   const handlePDF = useReactToPrint({
     contentRef:docRef,
     documentTitle:'FresherAiPDF'
   })
+
   const handleDownload = async()=>{
     try {
-        const coinResponse = await useCoins({ coins:10, action:"resume-builder" })
-        
+        const coinResponse = await useCoins({ coins:10, action:"download-pdf" })
+        await handlePDF()
         setUser((prev)=>({
             ...prev, 
             interviewCoins: coinResponse?.interviewCoins,
         }))
-        handlePDF()
+        
     } catch (error) {
         console.log(error)
       if(error.response?.status === 403){

@@ -89,17 +89,23 @@ function Scorer({ user, setUser }) {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { resume } = useSelector((state) => state.resume);
+  
   const uploadResume = async () => {
     if (!file) {
       alert("Please select a PDF");
     }
     try {
       setLoading(true);
-      
-      const coinResponse = await useCoins({coins:10, action:"resume-scorere"})
-      setUser((prev)=>({
-        ...prev, interviewCoins:coinResponse?.interviewCoins,
-      }))
+      try {
+        const coinResponse = await useCoins({coins:10, action:"resume-scorer"})
+        setUser((prev)=>({
+          ...prev, interviewCoins:coinResponse?.interviewCoins,
+        }))
+      } catch (error) {
+        setLoading(false)
+        alert("Failed to use Coins.")
+        return;
+      }
    
       const formData = new FormData();
       formData.append("resume", file);

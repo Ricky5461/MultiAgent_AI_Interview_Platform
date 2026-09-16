@@ -137,6 +137,9 @@ export const submitAnswer = async (req,res)=>{
                 completed: true,
                 
                 interview,
+
+                feedback: result.feedback,
+
             });
         }
 
